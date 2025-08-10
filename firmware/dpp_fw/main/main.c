@@ -95,11 +95,13 @@ Read and write GVs via HID
 2.3.2
 July 8 2025
 fixed a bug where HID buffer was not properly cleared
+
+2.3.3 - My Testversion
 */
 
 uint8_t fw_version_major = 2;
 uint8_t fw_version_minor = 3;
-uint8_t fw_version_patch = 2;
+uint8_t fw_version_patch = 3;
 uint8_t dsvm_version = 1;
 
 static const char *TAG = "MAIN";

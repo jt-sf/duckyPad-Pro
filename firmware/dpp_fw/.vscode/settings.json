@@ -5,7 +5,7 @@
     "board/esp32s3-builtin.cfg"
   ],
   "idf.flashType": "UART",
-  "idf.portWin": "COM36",
+  "idf.portWin": "COM15",
   "files.associations": {
     "gpio.h": "c",
     "string.h": "c",
@@ -75,5 +75,8 @@
     "tuple": "c",
     "utility": "c",
     "ssd1306_fonts.h": "c"
-  }
+  },
+  "idf.espIdfPathWin": "C:\\Users\\Robin\\esp\\v5.3.3\\esp-idf",
+  "idf.toolsPathWin": "C:\\Users\\Robin\\.espressif",
+  "idf.pythonInstallPath": "C:\\Users\\Robin\\.espressif\\tools\\idf-python\\3.11.2\\python.exe"
 }

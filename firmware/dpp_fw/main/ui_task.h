@@ -40,8 +40,8 @@ void draw_kbled_icon(uint8_t this_led_state, uint8_t update_screen);
 #define SLEEP_OPTION_SIZE 7
 
 #define OLED_DIM_AFTER_MS ONE_MINUTE_IN_MS
-#define OLED_CONTRAST_DIM 100
-#define OLED_CONTRAST_BRIGHT 255
+#define OLED_CONTRAST_DIM 50
+#define OLED_CONTRAST_BRIGHT 175
 
 #define SETTINGS_ENTRY_SIZE 6
 
