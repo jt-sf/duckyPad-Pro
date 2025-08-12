@@ -221,6 +221,16 @@ void draw_settings_led(void)
   neopixel_draw_current_buffer();
 }
 
+void draw_settings2_led(void)
+{
+  neopixel_off();
+
+  for (size_t i = 0; i < SETTINGS2_ENTRY_SIZE; i++)
+    set_pixel_3color(i, 0, 0, 255);
+  
+  neopixel_draw_current_buffer();
+}
+
 void get_current_color(uint8_t which, uint8_t* red, uint8_t* green, uint8_t* blue)
 {
   *red = red_buf[pixel_map[which]];

@@ -216,6 +216,7 @@ void app_main(void)
             start_sleeping();
 
         if(ms_since_last_keypress > OLED_DIM_AFTER_MS)
-            oled_brightness = OLED_CONTRAST_DIM;
+            oled_brightness = dp_settings.oled_dim;
+            //oled_brightness = OLED_CONTRAST_DIM;
     }
 }

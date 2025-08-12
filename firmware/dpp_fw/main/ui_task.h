@@ -21,6 +21,7 @@ void draw_nosd(void);
 void draw_noprofile(void);
 void draw_profile(profile_info* this_profile);
 void draw_settings(dp_global_settings *dps);
+void draw_settings2(dp_global_settings *dps);
 void draw_msc_mode(void);
 void draw_exe_error(uint8_t err_code);
 void draw_fw_update_ask(char* fw_path_str);
@@ -33,6 +34,7 @@ void draw_nvm_erase();
 void draw_no_usb_activity();
 void update_kbled_icon(uint8_t this_led_state);
 void draw_kbled_icon(uint8_t this_led_state, uint8_t update_screen);
+void draw_r2_icon(uint8_t this_r2_state, uint8_t update_screen);
 
 #define ONE_MINUTE_IN_MS (60*1000)
 #define ONE_HOUR_IN_MS (60*ONE_MINUTE_IN_MS)
@@ -42,8 +44,11 @@ void draw_kbled_icon(uint8_t this_led_state, uint8_t update_screen);
 #define OLED_DIM_AFTER_MS ONE_MINUTE_IN_MS
 #define OLED_CONTRAST_DIM 50
 #define OLED_CONTRAST_BRIGHT 175
+#define OLED_CONTRAST_BRIGHT_MIN 25
+#define OLED_CONTRAST_BRIGHT_MAX 255
 
-#define SETTINGS_ENTRY_SIZE 6
+#define SETTINGS_ENTRY_SIZE 7
+#define SETTINGS2_ENTRY_SIZE 3
 
 extern uint32_t sleep_after_ms_index_to_time_lookup[SLEEP_OPTION_SIZE];
 
