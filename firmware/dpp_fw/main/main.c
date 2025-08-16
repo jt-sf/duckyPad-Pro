@@ -101,7 +101,7 @@ fixed a bug where HID buffer was not properly cleared
 
 uint8_t fw_version_major = 2;
 uint8_t fw_version_minor = 3;
-uint8_t fw_version_patch = 3;
+uint8_t fw_version_patch = 4;
 uint8_t dsvm_version = 1;
 
 static const char *TAG = "MAIN";
@@ -114,7 +114,7 @@ static const char *TAG = "MAIN";
 void app_main(void)
 {
     // brief delay in case of SD card removal reboot
-    delay_ms(250);
+    delay_ms(5000);
     gpio_install_isr_service(0); // BEFORE GPIO INIT
     esp_read_mac(esp_mac_addr, ESP_MAC_ADDR_SIZE);
     my_rotary_encoder_init();
