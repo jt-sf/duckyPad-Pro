@@ -27,6 +27,15 @@ void strip_newline(char* line, uint16_t size)
       line[i] = 0;
 }
 
+uint8_t how_many_digits(uint8_t number)
+{
+  if(number >= 100)
+    return 3;
+  if(number >= 10)
+    return 2;
+  return 1;
+}
+
 char* goto_next_arg(char* buf, char* buf_end)
 {
   char* curr = buf;  

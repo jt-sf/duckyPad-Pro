@@ -34,6 +34,8 @@ const char config_brightness_index[] = "brightness_index ";
 const char config_keyboard_layout[] = "kb_layout ";
 const char config_last_used_profile[] = "last_profile ";
 const char config_bt_mode[] = "bt_mode ";
+const char config_oled_brightness[] = "oled_brightness ";
+const char config_oled_dim[] = "oled_dim ";
 
 const char cmd_BG_COLOR[] = "BG_COLOR ";
 const char cmd_KD_COLOR[] = "KEYDOWN_COLOR ";
@@ -96,6 +98,14 @@ uint8_t load_settings(dp_global_settings* dps)
       strcpy(dps->current_kb_layout, temp_buf + strlen(config_keyboard_layout));
       strip_newline(dps->current_kb_layout, FILENAME_BUFSIZE);
     }
+    if(strncmp(temp_buf, config_oled_brightness, strlen(config_oled_brightness)) == 0)
+      dps->oled_brightness = atoi(temp_buf + strlen(config_oled_brightness));
+    if(strncmp(temp_buf, config_oled_dim, strlen(config_oled_dim)) == 0)
+      dps->oled_dim = atoi(temp_buf + strlen(config_oled_dim));
+    if(dps->oled_brightness < OLED_CONTRAST_BRIGHT_MIN)
+      dps->oled_brightness = OLED_CONTRAST_BRIGHT;
+    if(dps->oled_dim < OLED_CONTRAST_BRIGHT_MIN)
+      dps->oled_dim = OLED_CONTRAST_DIM;  
   }
   fclose(sd_file);
   return 0;
@@ -116,14 +126,18 @@ uint8_t save_settings(dp_global_settings* dps)
     "fw_ver %d.%d.%d\n"
     "serial_number DP24_%02X%02X%02X\n"
     "%s%s\n"
-    "bt_mode %d\n",
+    "bt_mode %d\n"
+    "oled_brightness %d\n"
+    "oled_dim %d\n",
     config_sleep_after_index, dps->sleep_index,
     config_brightness_index, dps->brightness_index,
     config_last_used_profile, current_profile_number,
     fw_version_major, fw_version_minor, fw_version_patch,
     esp_mac_addr[3], esp_mac_addr[4], esp_mac_addr[5],
     config_keyboard_layout, dps->current_kb_layout,
-    dps->bt_mode
+    dps->bt_mode,
+    dps->oled_brightness,
+    dps->oled_dim
   );
   fclose(sd_file);
   return 0;

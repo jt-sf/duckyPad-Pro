@@ -453,6 +453,44 @@ void draw_settings(dp_global_settings *dps)
   // ssd1306_take_screenshot();
 }
 
+void draw_settings2(dp_global_settings *dps)
+{
+  ssd1306_Fill(Black);
+
+  memset(oled_line_buf, 0, OLED_LINE_BUF_SIZE);
+  sprintf(oled_line_buf, "Settings 2");
+  ssd1306_SetCursor(center_line(strlen(oled_line_buf), 7, SSD1306_WIDTH), 0);
+  ssd1306_WriteString(oled_line_buf, Font_7x10, White);
+
+  ssd1306_Line(0,10,128,10,White);
+
+//------------------------------
+
+  memset(oled_line_buf, 0, OLED_LINE_BUF_SIZE);
+  sprintf(oled_line_buf, "1-OLED bright %d", dps->oled_brightness);
+  ssd1306_SetCursor(0, 14);
+  ssd1306_WriteString(oled_line_buf, Font_7x10, White);
+
+//------------------------------
+
+  memset(oled_line_buf, 0, OLED_LINE_BUF_SIZE);
+  sprintf(oled_line_buf, "2-OLED dim: %d", dps->oled_dim);
+  ssd1306_SetCursor(0, 29);
+  ssd1306_WriteString(oled_line_buf, Font_7x10, White);
+
+//------------------------------
+
+  ssd1306_Line(0,115,128,115,White);
+
+  memset(oled_line_buf, 0, OLED_LINE_BUF_SIZE);
+  sprintf(oled_line_buf, "FW V%d.%d.%d", fw_version_major, fw_version_minor, fw_version_patch);
+  ssd1306_SetCursor(center_line(strlen(oled_line_buf), 7, SSD1306_WIDTH), 118);
+  ssd1306_WriteString(oled_line_buf, Font_7x10, White);
+
+  ssd1306_UpdateScreen();
+  // ssd1306_take_screenshot();
+}
+
 static const char* exe_error_string(uint8_t err_code)
 {
   switch (err_code) {
@@ -751,6 +789,21 @@ void update_kbled_icon(uint8_t this_led_state)
     return;
   draw_kbled_icon(this_led_state, 1);
   last_led_state = this_led_state;
+}
+
+void draw_r2_icon(uint8_t this_r2_state, uint8_t update_screen)
+{
+  SSD1306_COLOR color;
+  // R2 text
+  //color = (this_r2_state & 0x1) ? Black : White;
+  
+  memset(oled_line_buf, 0, OLED_LINE_BUF_SIZE);
+  sprintf(oled_line_buf, "R2");
+  ssd1306_SetCursor(20, 0);
+  ssd1306_WriteString(oled_line_buf, Font_7x10, White);
+
+  //if(update_screen)
+  //  ssd1306_UpdateScreen();
 }
 
 uint32_t last_bt_pin;

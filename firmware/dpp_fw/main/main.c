@@ -96,6 +96,8 @@ Read and write GVs via HID
 July 8 2025
 fixed a bug where HID buffer was not properly cleared
 
+2.3.3 - My Testversion
+
 2.4.0
 Nov 15 2025
 Adding RTC support
@@ -141,7 +143,7 @@ static const char *TAG = "MAIN";
 void app_main(void)
 {
     // brief delay in case of SD card removal reboot
-    delay_ms(250);
+    delay_ms(5000);
     gpio_install_isr_service(0); // BEFORE GPIO INIT
     esp_read_mac(esp_mac_addr, ESP_MAC_ADDR_SIZE);
     my_rotary_encoder_init();
@@ -246,6 +248,7 @@ void app_main(void)
             start_sleeping();
 
         if(ms_since_last_keypress > OLED_DIM_AFTER_MS)
-            oled_brightness = OLED_CONTRAST_DIM;
+            oled_brightness = dp_settings.oled_dim;
+            //oled_brightness = OLED_CONTRAST_DIM;
     }
 }

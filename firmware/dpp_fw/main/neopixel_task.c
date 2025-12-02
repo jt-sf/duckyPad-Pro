@@ -18,7 +18,7 @@ uint8_t green_buf[NEOPIXEL_COUNT];
 uint8_t blue_buf[NEOPIXEL_COUNT];
 led_animation neo_anime[NEOPIXEL_COUNT];
 uint8_t color_red[THREE] = {64 , 0, 0};
-uint8_t brightness_index_to_percent_lookup[BRIGHTNESS_LEVEL_SIZE] = {100, 70, 50, 20, 0};
+uint8_t brightness_index_to_percent_lookup[BRIGHTNESS_LEVEL_SIZE] = {100, 70, 50, 20, 15, 10, 5, 4, 3, 2, 1, 0};
 SemaphoreHandle_t neopixel_mutex;
 
 void set_pixel_3color(uint8_t which, uint8_t r, uint8_t g, uint8_t b)
@@ -216,6 +216,16 @@ void draw_settings_led(void)
   neopixel_off();
 
   for (size_t i = 0; i < SETTINGS_ENTRY_SIZE; i++)
+    set_pixel_3color(i, 0, 0, 255);
+  
+  neopixel_draw_current_buffer();
+}
+
+void draw_settings2_led(void)
+{
+  neopixel_off();
+
+  for (size_t i = 0; i < SETTINGS2_ENTRY_SIZE; i++)
     set_pixel_3color(i, 0, 0, 255);
   
   neopixel_draw_current_buffer();

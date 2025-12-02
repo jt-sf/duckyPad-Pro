@@ -12,7 +12,7 @@
 #define NEOPIXEL_COUNT MECH_OBSW_COUNT
 #define NEOPIXEL_PIN 46
 
-#define BRIGHTNESS_LEVEL_SIZE 5
+#define BRIGHTNESS_LEVEL_SIZE 12
 #define ANIMATION_NONE 0
 #define ANIMATION_CROSS_FADE 1
 
@@ -46,6 +46,7 @@ void neopixel_off(void);
 void set_pixel_3color(uint8_t which, uint8_t r, uint8_t g, uint8_t b);
 void reset_key_color(uint8_t which);
 void draw_settings_led(void);
+void draw_settings2_led(void);
 void get_current_color(uint8_t which, uint8_t* red, uint8_t* green, uint8_t* blue);
 void set_pixel_3color_update_buffer(uint8_t which, uint8_t r, uint8_t g, uint8_t b);
 void halt_all_animations(void);

@@ -197,6 +197,10 @@ void onboard_offboard_switch_press(uint8_t swid, char* press_path, char* release
 uint8_t settings_menu(void)
 {
   uint8_t needs_reboot = 0;
+  uint8_t menu_page = 0;
+  uint8_t use_rot_enc = 0;
+  uint8_t sub_setting = 0;
+  //uint8_t sub_key = 0;
   ssd1306_set_rotation_only_for_128x128_do_not_use_for_anything_else(SSD1306_NO_ROTATION);
   draw_settings(&dp_settings);
   draw_settings_led();
@@ -209,58 +213,179 @@ uint8_t settings_menu(void)
     if(sw_event.type != SW_EVENT_RELEASE)
       continue;
 
-    // printf("settings_menu id: %d type: %d\n", sw_event.id, sw_event.type);
-    if(sw_event.id == MSW_0)
+    if(menu_page == 0)
     {
-      dp_settings.brightness_index = (dp_settings.brightness_index + 1) % BRIGHTNESS_LEVEL_SIZE;
-      draw_settings(&dp_settings);
-      draw_settings_led();
-    }
-    else if(sw_event.id == MSW_1)
-    {
-      dp_settings.sleep_index = (dp_settings.sleep_index + 1) % SLEEP_OPTION_SIZE;
-      draw_settings(&dp_settings);
-    }
-    else if(sw_event.id == MSW_2)
-    {
-      CLEAR_TEMP_BUF();
-      if(get_next_keymap(dp_settings.current_kb_layout, temp_buf))
+      // printf("settings_menu id: %d type: %d\n", sw_event.id, sw_event.type);
+      if(sw_event.id == MSW_0)
       {
-        memset(dp_settings.current_kb_layout, 0, FILENAME_BUFSIZE);
-        get_first_keymap(dp_settings.current_kb_layout);
+        dp_settings.brightness_index = (dp_settings.brightness_index + 1) % BRIGHTNESS_LEVEL_SIZE;
+        draw_settings(&dp_settings);
+        draw_settings_led();
+      }
+      else if(sw_event.id == MSW_1)
+      {
+        dp_settings.sleep_index = (dp_settings.sleep_index + 1) % SLEEP_OPTION_SIZE;
+        draw_settings(&dp_settings);
+      }
+      else if(sw_event.id == MSW_2)
+      {
+        CLEAR_TEMP_BUF();
+        if(get_next_keymap(dp_settings.current_kb_layout, temp_buf))
+        {
+          memset(dp_settings.current_kb_layout, 0, FILENAME_BUFSIZE);
+          get_first_keymap(dp_settings.current_kb_layout);
+        }
+        else
+        {
+          strcpy(dp_settings.current_kb_layout, temp_buf);
+        }
+        draw_settings(&dp_settings);
+        load_keymap_by_name(dp_settings.current_kb_layout);
+      }
+      else if(sw_event.id == MSW_3)
+      {
+        dp_settings.bt_mode = (dp_settings.bt_mode + 1) % BT_MODE_SIZE;
+        draw_settings(&dp_settings);
+        needs_reboot = 1;
+      }
+      else if(sw_event.id == MSW_4)
+      {
+        neopixel_fill(0, 0, 128);
+        nvs_flash_erase();
+        draw_nvm_erase();
+        block_until_anykey(SW_EVENT_SHORT_PRESS);
+        esp_restart();
+      }
+      else if(sw_event.id == MSW_5)
+      {
+        generate_msc_flag_file();
+        esp_restart();
+      }
+      else if(sw_event.id == MSW_6)
+      {
+        menu_page = 1;
+        draw_settings2(&dp_settings);
+        draw_settings2_led();
+      }      
+      else if(sw_event.id <= MAX_MSW)
+      {
+        break;
+      }
+    }
+    else if(menu_page == 1)
+    {
+      if(use_rot_enc == 1)
+      {
+        //sub_key = readkey_blocking();
+        if(sub_setting == 0)
+        {
+          if(sw_event.id == MSW_17)
+          {
+            dp_settings.oled_brightness = (dp_settings.oled_brightness + 1);
+            if(dp_settings.oled_brightness < OLED_CONTRAST_BRIGHT_MIN)
+              dp_settings.oled_brightness = OLED_CONTRAST_BRIGHT_MIN;
+
+            oled_brightness = dp_settings.oled_brightness;
+            draw_settings2(&dp_settings);
+            //draw_settings2_led();
+            //draw_r2_icon(use_rot_enc,0);
+          }
+          else if(sw_event.id  == MSW_16)
+          {
+            dp_settings.oled_brightness = (dp_settings.oled_brightness - 1);
+            if(dp_settings.oled_brightness < OLED_CONTRAST_BRIGHT_MIN)
+              dp_settings.oled_brightness = OLED_CONTRAST_BRIGHT_MAX;
+
+            oled_brightness = dp_settings.oled_brightness;
+            draw_settings2(&dp_settings);
+            //draw_settings2_led();
+            //draw_r2_icon(use_rot_enc,0);
+          }
+          else if(sw_event.id  == MSW_19)
+          {
+              use_rot_enc = 0;
+              oled_brightness = dp_settings.oled_brightness;
+              draw_settings2(&dp_settings);
+              draw_settings2_led();
+          }
+        }
+        else if(sub_setting == 1)
+        {
+          if(sw_event.id  == MSW_17)
+          {
+            dp_settings.oled_dim = (dp_settings.oled_dim + 1);
+            if(dp_settings.oled_dim < OLED_CONTRAST_BRIGHT_MIN)
+              dp_settings.oled_dim = OLED_CONTRAST_BRIGHT_MIN;
+            
+            oled_brightness = dp_settings.oled_dim;
+            draw_settings2(&dp_settings);
+            //draw_settings2_led();
+            //draw_r2_icon(use_rot_enc,0);
+          }
+          else if(sw_event.id  == MSW_16)
+          {
+            dp_settings.oled_dim = (dp_settings.oled_dim - 1);
+            if(dp_settings.oled_dim < OLED_CONTRAST_BRIGHT_MIN)
+              dp_settings.oled_dim = OLED_CONTRAST_BRIGHT_MAX;
+
+            oled_brightness = dp_settings.oled_dim;
+            draw_settings2(&dp_settings);
+            //draw_settings2_led();
+            //draw_r2_icon(use_rot_enc,0);
+          }
+          else if(sw_event.id  == MSW_19)
+          {
+              use_rot_enc = 0;
+              oled_brightness = dp_settings.oled_brightness;
+              draw_settings2(&dp_settings);
+              draw_settings2_led();
+          }
+        }
       }
       else
       {
-        strcpy(dp_settings.current_kb_layout, temp_buf);
+        // printf("settings_menu id: %d type: %d\n", sw_event.id, sw_event.type);
+        if(sw_event.id == MSW_0)
+        {
+          use_rot_enc = 1;
+          sub_setting = 0;
+          //draw_r2_icon(use_rot_enc,0);
+
+          neopixel_off();
+          set_pixel_3color(16, 0, 0, 255);
+          set_pixel_3color(17, 0, 0, 255);
+          set_pixel_3color(19, 0, 0, 255);
+          neopixel_draw_current_buffer();
+          oled_brightness = dp_settings.oled_brightness;
+        }
+        else if(sw_event.id == MSW_1)
+        {
+          use_rot_enc = 1;
+          sub_setting = 1;
+          //draw_r2_icon(use_rot_enc,0);
+          
+          neopixel_off();
+          set_pixel_3color(16, 0, 0, 255);
+          set_pixel_3color(17, 0, 0, 255);
+          set_pixel_3color(19, 0, 0, 255);
+          neopixel_draw_current_buffer();
+          oled_brightness = dp_settings.oled_dim;
+        }
+        else if(sw_event.id == MSW_2)
+        {
+          menu_page = 0;
+          draw_settings(&dp_settings);
+          draw_settings_led();
+        }
+        else if(sw_event.id <= MAX_MSW)
+        {
+          break;
+        }      
       }
-      draw_settings(&dp_settings);
-      load_keymap_by_name(dp_settings.current_kb_layout);
-    }
-    else if(sw_event.id == MSW_3)
-    {
-      dp_settings.bt_mode = (dp_settings.bt_mode + 1) % BT_MODE_SIZE;
-      draw_settings(&dp_settings);
-      needs_reboot = 1;
-    }
-    else if(sw_event.id == MSW_4)
-    {
-      neopixel_fill(0, 0, 128);
-      nvs_flash_erase();
-      draw_nvm_erase();
-      block_until_anykey(SW_EVENT_SHORT_PRESS);
-      esp_restart();
-    }
-    else if(sw_event.id == MSW_5)
-    {
-      generate_msc_flag_file();
-      esp_restart();
-    }
-    else if(sw_event.id <= MAX_MSW)
-    {
-      break;
     }
   }
   save_settings(&dp_settings);
+  oled_brightness = dp_settings.oled_brightness;
   return needs_reboot;
 }
 
@@ -278,7 +403,8 @@ char dsb_on_release_path_buf[PATH_BUF_SIZE];
 
 void process_keyevent(uint8_t swid, uint8_t event_type)
 {
-  oled_brightness = OLED_CONTRAST_BRIGHT;
+  oled_brightness = dp_settings.oled_brightness;
+  //oled_brightness = OLED_CONTRAST_BRIGHT;
   if(swid == SW_PLUS && event_type == SW_EVENT_RELEASE)
   {
     goto_next_profile();
@@ -336,7 +462,8 @@ void wakeup_from_sleep_no_load(void)
   update_last_keypress();
   delay_ms(20);
   is_sleeping = 0;
-  oled_brightness = OLED_CONTRAST_BRIGHT;
+  //oled_brightness = OLED_CONTRAST_BRIGHT;
+  oled_brightness = dp_settings.oled_brightness;
 }
 
 void wakeup_from_sleep_and_load_profile(uint8_t profile_to_load)
@@ -363,7 +490,8 @@ void handle_rotary_encoder_event(rotary_encoder_event_t* this_re_event)
     wakeup_from_sleep_and_load_profile(current_profile_number);
     return;
   }
-  oled_brightness = OLED_CONTRAST_BRIGHT;
+  //oled_brightness = OLED_CONTRAST_BRIGHT;
+  oled_brightness = dp_settings.oled_brightness;
   uint8_t swid = re_event_to_swid(this_re_event);
   if(swid == 0)
     return;

@@ -29,6 +29,8 @@ typedef struct
   uint8_t bluetooth_priority;
   uint8_t last_used_profile;
   char current_kb_layout[FILENAME_BUFSIZE];
+  uint8_t oled_brightness;
+  uint8_t oled_dim;
 } dp_global_settings;
 
 /*
